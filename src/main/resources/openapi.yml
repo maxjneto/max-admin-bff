@@ -1,0 +1,311 @@
+openapi: 3.0.0
+info:
+  title: Demo BFF API
+  version: 1.0.0
+paths:
+  /cliente:
+    post:
+      summary: Create a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerDTO'
+      responses:
+        '200':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDTO'
+  /cliente/{id}:
+    get:
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDTO'
+  /cliente/nome/{nome}:
+    get:
+      summary: Get customer by name
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDTO'
+  /cliente/contatos/{id}:
+    get:
+      summary: Get customer contacts by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Customer contacts found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerContactDTO'
+  /cliente/documentos/{id}:
+    get:
+      summary: Get customer documents by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Customer documents found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerDocumentDTO'
+  /info/conta/numero/{numeroConta}:
+    get:
+      summary: Get account by number
+      parameters:
+        - name: numeroConta
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+  /info/conta/{id}:
+    get:
+      summary: List accounts by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Accounts found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDTO'
+  /info/saque/{numeroConta}:
+    get:
+      summary: List withdrawals by account number
+      parameters:
+        - name: numeroConta
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Withdrawals found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountWithdrawalDTO'
+  /info/deposito/{numeroConta}:
+    get:
+      summary: List deposits by account number
+      parameters:
+        - name: numeroConta
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deposits found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDepositDTO'
+  /info/transferencias/todas/{id}:
+    get:
+      summary: List all transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transfers found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+  /info/transferencias/enviadas/{id}:
+    get:
+      summary: List sent transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transfers found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+  /info/transferencias/recebidas/{id}:
+    get:
+      summary: List received transfers by account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Transfers found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferDTO'
+components:
+  schemas:
+    CreateCustomerDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        segmentName:
+          type: string
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerContactDTO'
+        cpf:
+          type: string
+    CustomerDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        segmentName:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerDocumentDTO'
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerContactDTO'
+    CustomerContactDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+    CustomerDocumentDTO:
+      type: object
+      properties:
+        documentNumber:
+          type: string
+        documentType:
+          type: string
+    AccountDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        accountNumber:
+          type: string
+        balance:
+          type: number
+          format: double
+    AccountWithdrawalDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        withdrawalDate:
+          type: string
+          format: date-time
+    AccountDepositDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        depositDate:
+          type: string
+          format: date-time
+    TransferDTO:
+      type: object
+      properties:
+        transferDate:
+          type: string
+          format: date-time
+        senderAccount:
+          $ref: '#/components/schemas/SimpleAccountDTO'
+        receiverAccount:
+          $ref: '#/components/schemas/SimpleAccountDTO'
+        amount:
+          type: number
+          format: double
+        transferType:
+          type: string
+    SimpleAccountDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        accountNumber:
+          type: string
